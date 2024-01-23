@@ -31,12 +31,34 @@ export default async function handler(
 
     let updatedFollowingIds = [...(user.followingIds || [])];
 
-    if(req.method === 'POST') {
+    if (req.method === "POST") {
       updatedFollowingIds.push(userId);
+
+      try {
+        await prisma.notification.create({
+          data: {
+            body: "Someone followed you!",
+            userId,
+          },
+        });
+
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            hasNotificaitons: true,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    if(req.method ==='DELETE') {
-      updatedFollowingIds = updatedFollowingIds.filter(followingId => followingId !== userId);
+    if (req.method === "DELETE") {
+      updatedFollowingIds = updatedFollowingIds.filter(
+        (followingId) => followingId !== userId
+      );
     }
 
     const updatedUser = await prisma.user.update({
@@ -45,7 +67,7 @@ export default async function handler(
       },
       data: {
         followingIds: updatedFollowingIds,
-      }
+      },
     });
 
     return res.status(200).json(updatedUser);

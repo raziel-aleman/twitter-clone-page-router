@@ -55,7 +55,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
           <p className="text-white">{fetchedUser?.bio}</p>
           <div className="flex flex-row items-center gap-2 mt-4 text-neutral-500">
             <BiCalendar size={24} />
-            <p className="">Joine {createdAt}</p>
+            <p className="">Joined {createdAt}</p>
           </div>
         </div>
         <div className="flex flex-row items-center mt-4 gap-6">
